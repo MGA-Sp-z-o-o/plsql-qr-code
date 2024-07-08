@@ -20,7 +20,7 @@
     2.0        09/02/2021  Zoran Tica       SVG files support
     2.1        21/08/2023  Zoran Tica       Display logo in QR code (for SVG QR Code representation)
     2.2        24/06/2024  k0mita           Select a QR code and background color for BMP representation
-
+    2.3        08/07/2024  kukimik          Upfront initialization of reference tables
 
     ----------------------------------------------------------------------------
     Copyright (C) 2018 - Zoran Tica

@@ -37,6 +37,104 @@ CREATE OR REPLACE PACKAGE BODY ZT_QR AS
     gprLog t_log_anti;
     gprAntiLog t_log_anti;
 
+    -- versions
+    TYPE t_version_values IS TABLE OF pls_integer;
+    TYPE t_versions IS TABLE OF t_version_values;
+
+    gprVersions CONSTANT t_versions :=
+        t_versions
+        (
+        /* 1  */  t_version_values(41,25,17,10,34,20,14,8,27,16,11,7,17,10,7,4)
+        /* 2  */ ,t_version_values(77,47,32,20,63,38,26,16,48,29,20,12,34,20,14,8)
+        /* 3  */ ,t_version_values(127,77,53,32,101,61,42,26,77,47,32,20,58,35,24,15)
+        /* 4  */ ,t_version_values(187,114,78,48,149,90,62,38,111,67,46,28,82,50,34,21)
+        /* 5  */ ,t_version_values(255,154,106,65,202,122,84,52,144,87,60,37,106,64,44,27)
+        /* 6  */ ,t_version_values(322,195,134,82,255,154,106,65,178,108,74,45,139,84,58,36)
+        /* 7  */ ,t_version_values(370,224,154,95,293,178,122,75,207,125,86,53,154,93,64,39)
+        /* 8  */ ,t_version_values(461,279,192,118,365,221,152,93,259,157,108,66,202,122,84,52)
+        /* 9  */ ,t_version_values(552,335,230,141,432,262,180,111,312,189,130,80,235,143,98,60)
+        /* 10 */ ,t_version_values(652,395,271,167,513,311,213,131,364,221,151,93,288,174,119,74)
+        /* 11 */ ,t_version_values(772,468,321,198,604,366,251,155,427,259,177,109,331,200,137,85)
+        /* 12 */ ,t_version_values(883,535,367,226,691,419,287,177,489,296,203,125,374,227,155,96)
+        /* 13 */ ,t_version_values(1022,619,425,262,796,483,331,204,580,352,241,149,427,259,177,109)
+        /* 14 */ ,t_version_values(1101,667,458,282,871,528,362,223,621,376,258,159,468,283,194,120)
+        /* 15 */ ,t_version_values(1250,758,520,320,991,600,412,254,703,426,292,180,530,321,220,136)
+        /* 16 */ ,t_version_values(1408,854,586,361,1082,656,450,277,775,470,322,198,602,365,250,154)
+        /* 17 */ ,t_version_values(1548,938,644,397,1212,734,504,310,876,531,364,224,674,408,280,173)
+        /* 18 */ ,t_version_values(1725,1046,718,442,1346,816,560,345,948,574,394,243,746,452,310,191)
+        /* 19 */ ,t_version_values(1903,1153,792,488,1500,909,624,384,1063,644,442,272,813,493,338,208)
+        /* 20 */ ,t_version_values(2061,1249,858,528,1600,970,666,410,1159,702,482,297,919,557,382,235)
+        /* 21 */ ,t_version_values(2232,1352,929,572,1708,1035,711,438,1224,742,509,314,969,587,403,248)
+        /* 22 */ ,t_version_values(2409,1460,1003,618,1872,1134,779,480,1358,823,565,348,1056,640,439,270)
+        /* 23 */ ,t_version_values(2620,1588,1091,672,2059,1248,857,528,1468,890,611,376,1108,672,461,284)
+        /* 24 */ ,t_version_values(2812,1704,1171,721,2188,1326,911,561,1588,963,661,407,1228,744,511,315)
+        /* 25 */ ,t_version_values(3057,1853,1273,784,2395,1451,997,614,1718,1041,715,440,1286,779,535,330)
+        /* 26 */ ,t_version_values(3283,1990,1367,842,2544,1542,1059,652,1804,1094,751,462,1425,864,593,365)
+        /* 27 */ ,t_version_values(3517,2132,1465,902,2701,1637,1125,692,1933,1172,805,496,1501,910,625,385)
+        /* 28 */ ,t_version_values(3669,2223,1528,940,2857,1732,1190,732,2085,1263,868,534,1581,958,658,405)
+        /* 29 */ ,t_version_values(3909,2369,1628,1002,3035,1839,1264,778,2181,1322,908,559,1677,1016,698,430)
+        /* 30 */ ,t_version_values(4158,2520,1732,1066,3289,1994,1370,843,2358,1429,982,604,1782,1080,742,457)
+        /* 31 */ ,t_version_values(4417,2677,1840,1132,3486,2113,1452,894,2473,1499,1030,634,1897,1150,790,486)
+        /* 32 */ ,t_version_values(4686,2840,1952,1201,3693,2238,1538,947,2670,1618,1112,684,2022,1226,842,518)
+        /* 33 */ ,t_version_values(4965,3009,2068,1273,3909,2369,1628,1002,2805,1700,1168,719,2157,1307,898,553)
+        /* 34 */ ,t_version_values(5253,3183,2188,1347,4134,2506,1722,1060,2949,1787,1228,756,2301,1394,958,590)
+        /* 35 */ ,t_version_values(5529,3351,2303,1417,4343,2632,1809,1113,3081,1867,1283,790,2361,1431,983,605)
+        /* 36 */ ,t_version_values(5836,3537,2431,1496,4588,2780,1911,1176,3244,1966,1351,832,2524,1530,1051,647)
+        /* 37 */ ,t_version_values(6153,3729,2563,1577,4775,2894,1989,1224,3417,2071,1423,876,2625,1591,1093,673)
+        /* 38 */ ,t_version_values(6479,3927,2699,1661,5039,3054,2099,1292,3599,2181,1499,923,2735,1658,1139,701)
+        /* 39 */ ,t_version_values(6743,4087,2809,1729,5313,3220,2213,1362,3791,2298,1579,972,2927,1774,1219,750)
+        /* 40 */ ,t_version_values(7089,4296,2953,1817,5596,3391,2331,1435,3993,2420,1663,1024,3057,1852,1273,784)
+        );
+
+    --alignment
+    TYPE t_alignment_col IS TABLE OF pls_integer;
+    TYPE t_alignment_pos IS TABLE OF t_alignment_col;
+    gprAlignPos CONSTANT t_alignment_pos :=
+        t_alignment_pos
+        (
+        /* 1  */  t_alignment_col(0)
+        /* 2  */ ,t_alignment_col(6, 18)
+        /* 3  */ ,t_alignment_col(6, 22)
+        /* 4  */ ,t_alignment_col(6, 26)
+        /* 5  */ ,t_alignment_col(6, 30)
+        /* 6  */ ,t_alignment_col(6, 34)
+        /* 7  */ ,t_alignment_col(6, 22, 38)
+        /* 8  */ ,t_alignment_col(6, 24, 42)
+        /* 9  */ ,t_alignment_col(6, 26, 46)
+        /* 10 */ ,t_alignment_col(6, 28, 50)
+        /* 11 */ ,t_alignment_col(6, 30, 54)
+        /* 12 */ ,t_alignment_col(6, 32, 58)
+        /* 13 */ ,t_alignment_col(6, 34, 62)
+        /* 14 */ ,t_alignment_col(6, 26, 46, 66)
+        /* 15 */ ,t_alignment_col(6, 26, 48, 70)
+        /* 16 */ ,t_alignment_col(6, 26, 50, 74)
+        /* 17 */ ,t_alignment_col(6, 30, 54, 78)
+        /* 18 */ ,t_alignment_col(6, 30, 56, 82)
+        /* 19 */ ,t_alignment_col(6, 30, 58, 86)
+        /* 20 */ ,t_alignment_col(6, 34, 62, 90)
+        /* 21 */ ,t_alignment_col(6, 28, 50, 72, 94)
+        /* 22 */ ,t_alignment_col(6, 26, 50, 74, 98)
+        /* 23 */ ,t_alignment_col(6, 30, 54, 78, 102)
+        /* 24 */ ,t_alignment_col(6, 28, 54, 80, 106)
+        /* 25 */ ,t_alignment_col(6, 32, 58, 84, 110)
+        /* 26 */ ,t_alignment_col(6, 30, 58, 86, 114)
+        /* 27 */ ,t_alignment_col(6, 34, 62, 90, 118)
+        /* 28 */ ,t_alignment_col(6, 26, 50, 74, 98, 122 )
+        /* 29 */ ,t_alignment_col(6, 30, 54, 78, 102, 126)
+        /* 30 */ ,t_alignment_col(6, 26, 52, 78, 104, 130 )
+        /* 31 */ ,t_alignment_col(6, 30, 56, 82, 108, 134 )
+        /* 32 */ ,t_alignment_col(6, 34, 60, 86, 112, 138 )
+        /* 33 */ ,t_alignment_col(6, 30, 58, 86, 114, 142 )
+        /* 34 */ ,t_alignment_col(6, 34, 62, 90, 118, 146 )
+        /* 35 */ ,t_alignment_col(6, 30, 54, 78, 102, 126, 150)
+        /* 36 */ ,t_alignment_col(6, 24, 50, 76, 102, 128, 154)
+        /* 37 */ ,t_alignment_col(6, 28, 54, 80, 106, 132, 158)
+        /* 38 */ ,t_alignment_col(6, 32, 58, 84, 110, 136, 162)
+        /* 39 */ ,t_alignment_col(6, 26, 54, 82, 110, 138, 166)
+        /* 40 */ ,t_alignment_col(6, 30, 58, 86, 114, 142, 170)
+        );
+
+
     --matrix
     TYPE t_row IS TABLE OF varchar2(1);
     TYPE t_column IS TABLE OF t_row;
@@ -168,11 +266,6 @@ END;
 
 
 PROCEDURE p_init_matrix IS
-
-    TYPE t_col IS TABLE OF pls_integer;
-    TYPE t_alignment_pos IS TABLE OF t_col;
-    lrAlignPos t_alignment_pos := t_alignment_pos();
-    
     lcModule varchar2(1);
 
     PROCEDURE p_add_finder(p_column pls_integer, p_row pls_integer) IS
@@ -200,54 +293,6 @@ PROCEDURE p_init_matrix IS
             END LOOP;
         END LOOP;
 
-    END;
-
-    PROCEDURE p_init_alignment IS
-    BEGIN
-        lrAlignPos.delete;
-        lrAlignPos.extend(40);
-        
-        lrAlignPos(1) := t_col(0);
-        lrAlignPos(2) := t_col(6, 18);
-        lrAlignPos(3) := t_col(6, 22);
-        lrAlignPos(4) := t_col(6, 26);
-        lrAlignPos(5) := t_col(6, 30);
-        lrAlignPos(6) := t_col(6, 34);
-        lrAlignPos(7) := t_col(6, 22, 38);
-        lrAlignPos(8) := t_col(6, 24, 42);
-        lrAlignPos(9) := t_col(6, 26, 46);
-        lrAlignPos(10) := t_col(6, 28, 50);
-        lrAlignPos(11) := t_col(6, 30, 54);
-        lrAlignPos(12) := t_col(6, 32, 58);
-        lrAlignPos(13) := t_col(6, 34, 62);
-        lrAlignPos(14) := t_col(6, 26, 46, 66);
-        lrAlignPos(15) := t_col(6, 26, 48, 70);
-        lrAlignPos(16) := t_col(6, 26, 50, 74);
-        lrAlignPos(17) := t_col(6, 30, 54, 78);
-        lrAlignPos(18) := t_col(6, 30, 56, 82);
-        lrAlignPos(19) := t_col(6, 30, 58, 86);
-        lrAlignPos(20) := t_col(6, 34, 62, 90);
-        lrAlignPos(21) := t_col(6, 28, 50, 72, 94);
-        lrAlignPos(22) := t_col(6, 26, 50, 74, 98);
-        lrAlignPos(23) := t_col(6, 30, 54, 78, 102);
-        lrAlignPos(24) := t_col(6, 28, 54, 80, 106);
-        lrAlignPos(25) := t_col(6, 32, 58, 84, 110);
-        lrAlignPos(26) := t_col(6, 30, 58, 86, 114);
-        lrAlignPos(27) := t_col(6, 34, 62, 90, 118);
-        lrAlignPos(28) := t_col(6, 26, 50, 74, 98, 122 );
-        lrAlignPos(29) := t_col(6, 30, 54, 78, 102, 126);
-        lrAlignPos(30) := t_col(6, 26, 52, 78, 104, 130 );
-        lrAlignPos(31) := t_col(6, 30, 56, 82, 108, 134 );
-        lrAlignPos(32) := t_col(6, 34, 60, 86, 112, 138 );
-        lrAlignPos(33) := t_col(6, 30, 58, 86, 114, 142 );
-        lrAlignPos(34) := t_col(6, 34, 62, 90, 118, 146 );
-        lrAlignPos(35) := t_col(6, 30, 54, 78, 102, 126, 150);
-        lrAlignPos(36) := t_col(6, 24, 50, 76, 102, 128, 154);
-        lrAlignPos(37) := t_col(6, 28, 54, 80, 106, 132, 158);
-        lrAlignPos(38) := t_col(6, 32, 58, 84, 110, 136, 162);
-        lrAlignPos(39) := t_col(6, 26, 54, 82, 110, 138, 166);
-        lrAlignPos(40) := t_col(6, 30, 58, 86, 114, 142, 170);
-        
     END;
 
     PROCEDURE p_add_alignment(p_column pls_integer, p_row pls_integer) IS
@@ -324,12 +369,10 @@ BEGIN
     
 
     --add Alignment Patterns (for versions larger then 1)
-    p_init_alignment;
-    
     if gpnVersion > 1 then
-        FOR t IN 1 .. lrAlignPos(gpnVersion).count LOOP
-            FOR p IN 1 .. lrAlignPos(gpnVersion).count LOOP
-                p_add_alignment(lrAlignPos(gpnVersion)(t) + 1, lrAlignPos(gpnVersion)(p) + 1);
+        FOR t IN 1 .. gprAlignPos(gpnVersion).count LOOP
+            FOR p IN 1 .. gprAlignPos(gpnVersion).count LOOP
+                p_add_alignment(gprAlignPos(gpnVersion)(t) + 1, gprAlignPos(gpnVersion)(p) + 1);
             END LOOP;
         END LOOP;
     end if;
@@ -762,46 +805,11 @@ Version 1 can contain maximal 20 characters and it is not enough.
 FUNCTION f_get_version(
     p_data varchar2,
     p_error_correction varchar2) RETURN pls_integer IS
-    
-    TYPE t_values IS TABLE OF varchar2(1000) INDEX BY pls_integer;
-    lrValues t_values;
-
-    TYPE t_numbers IS TABLE OF pls_integer;
-    lrData t_numbers;
 
     lnVersion pls_integer := 0;
     lnLength pls_integer;
-    
-    lnElements pls_integer;
+
     lnPosition pls_integer;
-
-
-    FUNCTION f_explode(
-        p_text varchar2,
-        p_delimiter varchar2
-    ) RETURN t_numbers IS
-    
-        lrList t_numbers := t_numbers();
-        lnCounter pls_integer := 0;
-        lcText varchar2(32000) := p_text;
-    
-    BEGIN
-        LOOP
-            lnCounter := instr(lcText, p_delimiter);
-
-            if lnCounter > 0 then
-                lrList.extend(1);
-                lrList(lrList.count) := substr(lcText, 1, lnCounter - 1);
-                lcText := substr(lcText, lnCounter + length(p_delimiter));
-            else
-                lrList.extend(1);
-                lrList(lrList.count) := lcText;
-                RETURN lrList;
-            end if;
-            
-        END LOOP;
-    END f_explode;
-    
 BEGIN
     --initial values to determine version
     lnLength := lengthb(p_data);
@@ -818,76 +826,20 @@ BEGIN
     H       17              10       7               4
     
     index for variable lrValues is version
-    values are parsed in collection during runtime
     */
-
-    lrValues(1) := '41,25,17,10,34,20,14,8,27,16,11,7,17,10,7,4';
-    lrValues(2) := '77,47,32,20,63,38,26,16,48,29,20,12,34,20,14,8';
-    lrValues(3) := '127,77,53,32,101,61,42,26,77,47,32,20,58,35,24,15';
-    lrValues(4) := '187,114,78,48,149,90,62,38,111,67,46,28,82,50,34,21';
-    lrValues(5) := '255,154,106,65,202,122,84,52,144,87,60,37,106,64,44,27';
-    lrValues(6) := '322,195,134,82,255,154,106,65,178,108,74,45,139,84,58,36';
-    lrValues(7) := '370,224,154,95,293,178,122,75,207,125,86,53,154,93,64,39';
-    lrValues(8) := '461,279,192,118,365,221,152,93,259,157,108,66,202,122,84,52';
-    lrValues(9) := '552,335,230,141,432,262,180,111,312,189,130,80,235,143,98,60';
-    lrValues(10) := '652,395,271,167,513,311,213,131,364,221,151,93,288,174,119,74';
-    lrValues(11) := '772,468,321,198,604,366,251,155,427,259,177,109,331,200,137,85';
-    lrValues(12) := '883,535,367,226,691,419,287,177,489,296,203,125,374,227,155,96';
-    lrValues(13) := '1022,619,425,262,796,483,331,204,580,352,241,149,427,259,177,109';
-    lrValues(14) := '1101,667,458,282,871,528,362,223,621,376,258,159,468,283,194,120';
-    lrValues(15) := '1250,758,520,320,991,600,412,254,703,426,292,180,530,321,220,136';
-    lrValues(16) := '1408,854,586,361,1082,656,450,277,775,470,322,198,602,365,250,154';
-    lrValues(17) := '1548,938,644,397,1212,734,504,310,876,531,364,224,674,408,280,173';
-    lrValues(18) := '1725,1046,718,442,1346,816,560,345,948,574,394,243,746,452,310,191';
-    lrValues(19) := '1903,1153,792,488,1500,909,624,384,1063,644,442,272,813,493,338,208';
-    lrValues(20) := '2061,1249,858,528,1600,970,666,410,1159,702,482,297,919,557,382,235';
-    lrValues(21) := '2232,1352,929,572,1708,1035,711,438,1224,742,509,314,969,587,403,248';
-    lrValues(22) := '2409,1460,1003,618,1872,1134,779,480,1358,823,565,348,1056,640,439,270';
-    lrValues(23) := '2620,1588,1091,672,2059,1248,857,528,1468,890,611,376,1108,672,461,284';
-    lrValues(24) := '2812,1704,1171,721,2188,1326,911,561,1588,963,661,407,1228,744,511,315';
-    lrValues(25) := '3057,1853,1273,784,2395,1451,997,614,1718,1041,715,440,1286,779,535,330';
-    lrValues(26) := '3283,1990,1367,842,2544,1542,1059,652,1804,1094,751,462,1425,864,593,365';
-    lrValues(27) := '3517,2132,1465,902,2701,1637,1125,692,1933,1172,805,496,1501,910,625,385';
-    lrValues(28) := '3669,2223,1528,940,2857,1732,1190,732,2085,1263,868,534,1581,958,658,405';
-    lrValues(29) := '3909,2369,1628,1002,3035,1839,1264,778,2181,1322,908,559,1677,1016,698,430';
-    lrValues(30) := '4158,2520,1732,1066,3289,1994,1370,843,2358,1429,982,604,1782,1080,742,457';
-    lrValues(31) := '4417,2677,1840,1132,3486,2113,1452,894,2473,1499,1030,634,1897,1150,790,486';
-    lrValues(32) := '4686,2840,1952,1201,3693,2238,1538,947,2670,1618,1112,684,2022,1226,842,518';
-    lrValues(33) := '4965,3009,2068,1273,3909,2369,1628,1002,2805,1700,1168,719,2157,1307,898,553';
-    lrValues(34) := '5253,3183,2188,1347,4134,2506,1722,1060,2949,1787,1228,756,2301,1394,958,590';
-    lrValues(35) := '5529,3351,2303,1417,4343,2632,1809,1113,3081,1867,1283,790,2361,1431,983,605';
-    lrValues(36) := '5836,3537,2431,1496,4588,2780,1911,1176,3244,1966,1351,832,2524,1530,1051,647';
-    lrValues(37) := '6153,3729,2563,1577,4775,2894,1989,1224,3417,2071,1423,876,2625,1591,1093,673';
-    lrValues(38) := '6479,3927,2699,1661,5039,3054,2099,1292,3599,2181,1499,923,2735,1658,1139,701';
-    lrValues(39) := '6743,4087,2809,1729,5313,3220,2213,1362,3791,2298,1579,972,2927,1774,1219,750';
-    lrValues(40) := '7089,4296,2953,1817,5596,3391,2331,1435,3993,2420,1663,1024,3057,1852,1273,784';
-
 
     --a version depending of error correction method, mode and data length
     lnPosition := (f_err_cor_2_number(p_error_correction) - 1) * 4 + gpnMode;
     
     p_debug('length: ' || lnLength, 2);
 
-    FOR t IN 1 .. 40 LOOP
-        p_debug(lrValues(t), 4);
-        
-        /*
-        SELECT to_number(column_value) a
-        BULK COLLECT INTO lrData
-        FROM XMLTABLE(lrValues(t));
-        */
-        lrData := f_explode(
-            p_text => lrValues(t),
-            p_delimiter => ','
-        );
+    FOR t IN 1 .. gprVersions.COUNT LOOP
+        p_debug('Value on position ' || lnPosition || ': ' || gprVersions(t)(lnPosition), 2);
 
-        p_debug('Value on position ' || lnPosition || ': ' || lrData(lnPosition), 2);
-        
-        if lrData(lnPosition) >= lnLength then
+        if gprVersions(t)(lnPosition) >= lnLength then
             lnVersion := t;
             EXIT;
         end if;
-        
     END LOOP;
     
     --if version can not be determined then throw error
@@ -1791,9 +1743,6 @@ BEGIN
 
     gpnMode := f_get_mode(p_data);
     gpnVersion := f_get_version(p_data, p_error_correction);
- 
-    p_fill_err_cor;
-    p_fill_log_antilog;
     
     --init matrix collection and fill static elements
     --gpnVersion := 14;  --only for debugging
@@ -2523,6 +2472,8 @@ BEGIN
 END;
 
 
-
+BEGIN
+    p_fill_err_cor;
+    p_fill_log_antilog;
 END ZT_QR;
 /

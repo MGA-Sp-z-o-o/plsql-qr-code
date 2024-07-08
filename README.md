@@ -17,6 +17,7 @@ Item-type APEX plugin uses PL/SQL package for calculations and graphical impleme
 - 2.0 - SVG image files support
 - 2.1 - Show logo in QR code
 - 2.2 - Select a QR code and background color for BMP representation (thank You k0mita for the contribution!)
+- 2.3 - Upfront initialization of reference tables
 
 ## Install PL/SQL package
 - download 2 script files from "package" directory 
